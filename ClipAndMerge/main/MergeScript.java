@@ -39,7 +39,7 @@ import threads.ReverseClipperThread;
 /**
  * Clip & Merge script
  * @author guenter jaeger
- * @version 1.7.3
+ * @version 1.7.4
  * 
  * This script allows one to clip adapters from paired reads and 
  * to merge the clipped reads into a single read if they overlap
@@ -51,7 +51,7 @@ import threads.ReverseClipperThread;
  */
 public class MergeScript {
 	
-	public static final String VERSION = "1.7.3";
+	public static final String VERSION = "1.7.4";
 	public static final String TITLE = "ClipAndMerge (v. " + VERSION +")";
 	
 	public long startTime;
