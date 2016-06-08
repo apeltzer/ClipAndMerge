@@ -103,10 +103,18 @@ public class DataHandler {
 			Statistics.increaseNumNotMergedReverse();
 			Statistics.increaseReadPairsNotMerged();
 		} else if(fOK && !settings.removeSingleReads()) {
-			writeRead(readF, "F", bw);
+			if(settings.handleMatePairsSeperatly()){
+				writeRead(readF, "F", mpwf);
+			} else {
+				writeRead(readF, "F", bw);
+			}
 			Statistics.increaseNumNotMergedForward();
 		} else if(rOK && !settings.removeSingleReads()) {
-			writeRead(readR, "R", bw);
+			if(settings.handleMatePairsSeperatly()){
+				writeRead(readR,"R",mpwr);
+			} else {
+				writeRead(readR, "R", bw);
+			}
 			Statistics.increaseNumNotMergedReverse();
 		}
 	}
@@ -135,9 +143,21 @@ public class DataHandler {
 				Statistics.increaseMergedReads();
 				Statistics.increaseMergingOverlap(getCurrentOverlap());
 			}
-			
+
 			if(!settings.removeSingleReads())
-				this.writeRead(read, prefix, bw);
+				if(settings.handleMatePairsSeperatly()){
+					if(prefix.equals("F")){
+						writeRead(read,prefix,mpwf);
+					}
+					if(prefix.equals("R")){
+						writeRead(read,prefix,mpwr);
+					}
+					if(prefix.equals("M")){
+						writeRead(read,prefix,bw);
+					}
+				} else {
+					this.writeRead(read, prefix, bw);
+				}
 		}
 	}
 	
@@ -149,7 +169,7 @@ public class DataHandler {
 		this.currentOverlap = overlap;
 	}
 
-	private void writeRead(Read read, String prefix, BufferedWriter bw) throws IOException {
+	private void writeRead(Read read, String prefix, BufferedWriter writeOut) throws IOException {
 		StringBuffer result = new StringBuffer();
 		result.append(read.name.replaceFirst("@", "@"+prefix+"_"));
 		result.append("\n");
@@ -159,9 +179,8 @@ public class DataHandler {
 		result.append("\n");
 		result.append(read.quality);
 		result.append("\n");
-
-		bw.append(result);
-		bw.flush();
+		writeOut.append(result);
+		writeOut.flush();
 	}
 	
 	public synchronized void shutdown() throws IOException {
