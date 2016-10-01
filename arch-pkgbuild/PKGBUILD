@@ -1,0 +1,21 @@
+# Contributor: Alex Peltzer <alex.peltzer@gmail.com>
+# Maintainer: Alex Peltzer <alex.peltzer@gmail.com>
+
+pkgname=clipandmerge
+pkgver=1.7.4
+pkgrel=1
+pkgdesc="An adaptor clipping and read merging tool written in Java."
+arch=('any')
+url="http://it.inf.uni-tuebingen.de/?page_id=161"
+license=('custom')
+depends=('java-environment')
+source=("ClipAndMerge-${pkgver}.jar" "starter.sh")
+noextract=("ClipAndMerge-${pkgver}.jar")
+md5sums=('SKIP' 'SKIP')
+
+package() {
+  install -D -m755 "${srcdir}/ClipAndMerge-${pkgver}.jar" "${pkgdir}/opt/$pkgname/ClipAndMerge-${pkgver}.jar"
+  install -D -m755 "${srcdir}/starter.sh" "${pkgdir}/opt/$pkgname/starter.sh"
+  install -D -m755 "${pkgdir}/opt/$pkgname/starter.sh" "${pkgdir}/usr/bin/ClipAndMerge"
+}
+
