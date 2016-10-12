@@ -73,10 +73,10 @@ bintray {
         licenses = ['GPL-3.0']
         vcsUrl = "https://github.com/apeltzer/VCF2Genome"
         version {
-            name = '1.7.4'
+            name = project.version
             desc = 'The Clip&Merge Method for paired end read merging and adapter clipping, quality trimming and other FastQ operations.'
             released  = new Date()
-            vcsTag = '1.7.4'
+            vcsTag = project.version
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
 
