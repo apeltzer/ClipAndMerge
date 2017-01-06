@@ -21,42 +21,54 @@ import java.io.IOException;
 
 public class Statistics {
 
+  private static int numReadsFailClipping = 0;
+
 	private static int numMergedReads = 0;
 	private static int numFReads = 0;
 	private static int numRReads = 0;
-	
+
 	private static int numNotMergedFReads = 0;
 	private static int numNotMergedRReads = 0;
-	
+
 	private static int numReadPairsTooSmallOverlap = 0;
-	
+
 	private static int numReadsNotMergedTooShortF = 0;
 	private static int numReadsNotMergedTooShortR = 0;
-	
+
 	private static int numReadsNoPartnerTooShortF = 0;
 	private static int numReadsNoPartnerTooShortR = 0;
-	
+
 	private static int numReadsTooShortF = 0;
 	private static int numReadsTooShortR = 0;
 	private static int numReadsMergedTooShort = 0;
-	
+  private static int numReadsMateTooShort = 0;
+
 	private static int numDiscardedMergedReads = 0;
-	
+
 	private static int sumOverlaps = 0;
-	
+
 	public static void printStats(BufferedWriter logWriter) throws IOException {
+    logWriter.write("[Clipping both]");
+    logWriter.newLine();
+    logWriter.write("- Number of reads failed clipping: "+Integer.toString(numReadsFailClipping));
+    logWriter.newLine();
+    logWriter.newLine();
 		logWriter.write("[Merging]");
 		logWriter.newLine();
-		
-		logWriter.write("- Number of usable reads in the output file(s): " + Integer.toString(getNumReads()));
+
+		logWriter.write("- Number of usable reads in the output file(s): " + Integer.toString(numFReads + numReadPairsTooSmallOverlap + numNotMergedFReads + numMergedReads + numRReads + numReadPairsTooSmallOverlap + numNotMergedRReads));
 		logWriter.newLine();
 		logWriter.write("- Number of usable forward reads with no pairing reverse read: " + Integer.toString(numFReads));
 		logWriter.newLine();
 		logWriter.write("- Number of usable reverse reads with no pairing forward read: " + Integer.toString(numRReads));
 		logWriter.newLine();
-		logWriter.write("- Number of usable not merged forward reads: " + Integer.toString(numNotMergedFReads));
+    logWriter.write("- Number of usable forward reads with too short reverse read: " + Integer.toString(numNotMergedFReads));
+    logWriter.newLine();
+    logWriter.write("- Number of usable reverse reads with too short forward read: " + Integer.toString(numNotMergedRReads));
+    logWriter.newLine();
+		logWriter.write("- Number of usable not merged forward reads: " + Integer.toString(numFReads + numReadPairsTooSmallOverlap + numNotMergedFReads));
 		logWriter.newLine();
-		logWriter.write("- Number of usable not merged reverse reads: " + Integer.toString(numNotMergedRReads));
+		logWriter.write("- Number of usable not merged reverse reads: " + Integer.toString(numRReads + numReadPairsTooSmallOverlap + numNotMergedRReads));
 		logWriter.newLine();
 		logWriter.write("- Number of merged reads discarded due to bad quality: " + Integer.toString(numDiscardedMergedReads));
 		logWriter.newLine();
@@ -67,14 +79,14 @@ public class Statistics {
 		logWriter.newLine();
 		logWriter.write("- Average overlap region size: " + Double.toString(getAverageOverlap()));
 		logWriter.newLine();
-		
+
 		logWriter.newLine();
-		
+
 		logWriter.write("- Number of read pairs not merged (no overlap): " + Integer.toString(numReadPairsTooSmallOverlap));
 		logWriter.newLine();
-		
+
 		logWriter.newLine();
-		
+
 		int removedSingle = numReadsNotMergedTooShortF + numReadsNotMergedTooShortR + numReadsNoPartnerTooShortF + numReadsNoPartnerTooShortR + numReadsMergedTooShort;
 		logWriter.write("- Number of single reads removed: " + Integer.toString(removedSingle));
 		logWriter.newLine();
@@ -88,19 +100,13 @@ public class Statistics {
 		logWriter.newLine();
 		logWriter.write("     ... too short merged read: " + Integer.toString(numReadsMergedTooShort));
 		logWriter.newLine();
-		
+
 		logWriter.newLine();
 	}
-	
-	public static void increaseTooSmallOverlap() {
-		numReadPairsTooSmallOverlap++;
-	}
 
-	public static int numReadsTotal() {
-		int numReadsTooShort = getNumReadsTooShort();
-		int numReads = getNumReads();
-		return numReads + numReadsTooShort;
-	}
+  public static void increaseNumReadsFailClipping() {
+    numReadsFailClipping++;
+  }
 
 	public static void increaseForwardReads() {
 		numFReads++;
@@ -125,13 +131,13 @@ public class Statistics {
 	public static void increaseMergedTooShort() {
 		numReadsMergedTooShort++;
 	}
-	
+
+  public static void increaseMateTooShort() {
+    numReadsMateTooShort++;
+  }
+
 	public static int getNumReads() {
-		return numFReads + numRReads + numMergedReads + numNotMergedFReads + numNotMergedRReads - numDiscardedMergedReads;
-	}
-	
-	public static int getNumReadsTooShort() {
-		return numReadsTooShortF + numReadsTooShortR + numReadsMergedTooShort;
+		return numReadsFailClipping + numFReads + numReadsNoPartnerTooShortF + numRReads + numReadsNoPartnerTooShortR + numMergedReads + numReadsMergedTooShort + numNotMergedFReads + numNotMergedRReads + numReadPairsTooSmallOverlap + numReadsMateTooShort + numDiscardedMergedReads;
 	}
 
 	public static void increaseNumNotMergedForward() {
@@ -144,22 +150,18 @@ public class Statistics {
 
 	public static void increaseNotMergedForwardTooShort() {
 		numReadsNotMergedTooShortF++;
-		numReadsTooShortF++;
 	}
 
 	public static void increaseNotMergedReverseTooShort() {
 		numReadsNotMergedTooShortR++;
-		numReadsTooShortR++;
 	}
 
 	public static void increaseNoPartnerTooShortF() {
 		numReadsNoPartnerTooShortF++;
-		numReadsTooShortF++;
 	}
 
 	public static void increaseNoPartnerTooShortR() {
 		numReadsNoPartnerTooShortR++;
-		numReadsTooShortR++;
 	}
 
 	public static void increaseReadPairsNotMerged() {
@@ -169,11 +171,11 @@ public class Statistics {
 	public static void increaseDiscardedMergedReads() {
 		numDiscardedMergedReads++;
 	}
-	
+
 	public static void increaseMergingOverlap(int overlap) {
 		sumOverlaps+=overlap;
 	}
-	
+
 	public static double getAverageOverlap() {
 		return Math.round((((double)sumOverlaps / (double)numMergedReads))*1000.)/1000.;
 	}
