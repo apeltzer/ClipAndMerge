@@ -29,35 +29,35 @@ import trimming.QualityTrimmer;
 import clipping.Read;
 
 public class DataHandler {
-	
+
 	private MergeSettings settings;
-	
+
 	private BufferedWriter bw = null;
 	private BufferedWriter mpwf = null;
 	private BufferedWriter mpwr = null;
-	
+
 	private QualityTrimmer qt;
-	
+
 	private int currentOverlap = 0;
-	
+
 	public DataHandler(MergeSettings settings) {
 		this.settings = settings;
 		this.qt = new QualityTrimmer(settings);
 	}
-	
+
 	public void setup() throws IOException {
 		this.bw = settings.getOutputWriter();
-		
+
 		if(settings.handleMatePairsSeperatly()) {
 			File frf = settings.getMatePairFileForward();
 			File rrf = settings.getMatePairFileReverse();
-			
+
 			if(frf.getName().endsWith(".gz")) {
 				mpwf = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(frf))));
 			} else {
 				mpwf = new BufferedWriter(new FileWriter(settings.getMatePairFileForward()));
 			}
-			
+
 			if(rrf.getName().endsWith(".gz")) {
 				mpwr = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(rrf))));
 			} else {
@@ -73,24 +73,23 @@ public class DataHandler {
 		boolean fOK = false;
 		boolean rOK = false;
 		int minLength = settings.getMinSequenceLength();
-		
 		if(settings.qualityTrimming()) {
 			qt.trim(readF);
 			qt.trim(readR);
 		}
-		
+
 		if(readF.sequence.length() >= minLength) {
 			fOK = true;
 		} else {
 			Statistics.increaseNotMergedForwardTooShort();
 		}
-		
+
 		if(readR.sequence.length() >= minLength) {
 			rOK = true;
 		} else {
 			Statistics.increaseNotMergedReverseTooShort();
 		}
-		
+
 		if(fOK && rOK) {
 			if(settings.handleMatePairsSeperatly()) {
 				writeRead(readF, "", mpwf);
@@ -99,8 +98,6 @@ public class DataHandler {
 				writeRead(readF, "F", mpwf);
 				writeRead(readR, "R", mpwr);
 			}
-			Statistics.increaseNumNotMergedForward();
-			Statistics.increaseNumNotMergedReverse();
 			Statistics.increaseReadPairsNotMerged();
 		} else if(fOK && !settings.removeSingleReads()) {
 			if(settings.handleMatePairsSeperatly()){
@@ -116,16 +113,18 @@ public class DataHandler {
 				writeRead(readR, "R", bw);
 			}
 			Statistics.increaseNumNotMergedReverse();
-		}
+		} else {
+      Statistics.increaseMateTooShort();
+    }
 	}
-	
+
 	public void writeSingleEndRead(Read read, String prefix) throws IOException {
 		int minLength = settings.getMinSequenceLength();
 		//merged reads do not need to be quality trimmed
 		if(settings.qualityTrimming() && !prefix.equals("M")) {
 			qt.trim(read);
 		}
-		
+
 		if(read.sequence.length() < minLength) {
 			if(prefix.equals("M")) {
 				Statistics.increaseMergedTooShort();
@@ -160,11 +159,11 @@ public class DataHandler {
 				}
 		}
 	}
-	
+
 	public int getCurrentOverlap() {
 		return this.currentOverlap;
 	}
-	
+
 	public void setCurrentOverlap(int overlap) {
 		this.currentOverlap = overlap;
 	}
@@ -182,20 +181,20 @@ public class DataHandler {
 		writeOut.append(result);
 		writeOut.flush();
 	}
-	
+
 	public synchronized void shutdown() throws IOException {
 		if(this.bw != null) {
 			this.bw.flush();
 			this.bw.close();
 		}
-		
+
 		if(settings.handleMatePairsSeperatly()) {
 			this.mpwf.flush();
 			this.mpwf.close();
 			this.mpwr.flush();
 			this.mpwr.close();
 		}
-		
+
 		synchronized(settings.getLogWriter()) {
 			Statistics.printStats(settings.getLogWriter());
 			settings.getLogWriter().flush();
