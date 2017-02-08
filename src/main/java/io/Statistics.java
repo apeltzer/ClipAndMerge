@@ -119,13 +119,15 @@ public class Statistics {
     double percUnmergedNoPartnerTooShort = Math.round(((double)numPairsNoPartnerTooShort/numPairsUnmerged) * 10000.) / 100.;
 
     int totalUnmerged = numReadsMergedTooShort + numPairsMateAdapterOnly + numPairsMateTooShort + numReadsFailClipping + numDiscardedMergedReads + numReadPairsTooSmallOverlap + numReadsNoPartnerTooShortF + numReadsNoPartnerTooShortR;
-    logWriter.write("numPairsUnmerged: "+numPairsUnmerged);
-    logWriter.newLine();
-    logWriter.write("totalUnmerged: "+totalUnmerged);
-    logWriter.newLine();
+    //logWriter.write("numPairsUnmerged: "+numPairsUnmerged);
+    //logWriter.newLine();
+    //logWriter.write("totalUnmerged: "+totalUnmerged);
+    //logWriter.newLine();
 
     logWriter.write("[Unmerged breakdown]");
-		logWriter.newLine();
+    logWriter.newLine();
+    logWriter.write("- Number of pairs unmerged: "+Integer.toString(totalUnmerged));
+    logWriter.newLine();
     logWriter.write("- Percentage of unmerged pairs failed clipping: " + Double.toString(percUnmergedFailedClipping) + " %");
     logWriter.newLine();
     logWriter.write("- Percentage of unmerged pairs failed quality: " + Double.toString(percUnmergedFailedQuality) + " %");
