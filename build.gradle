@@ -1,5 +1,5 @@
 group 'com.uni-tuebingen.de.it.eager.clipandmerge'
-version '1.7.5'
+version '1.7.6'
 
 
 buildscript {
@@ -42,7 +42,7 @@ compile 'args4j:args4j:2.33'
 jar {
     manifest {
         attributes("Implementation-Title": "ClipAndMerge",
-                "Implementation-Version": "1.7.5", "main-Class": "main.MergeScript")
+                "Implementation-Version": "1.7.6", "main-Class": "main.MergeScript")
     }
     doFirst {
         from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }

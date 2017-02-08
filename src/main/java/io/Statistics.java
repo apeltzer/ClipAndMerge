@@ -73,8 +73,11 @@ public class Statistics {
 		logWriter.write("- Number of merged reads discarded due to bad quality: " + Integer.toString(numDiscardedMergedReads));
 		logWriter.newLine();
 		logWriter.write("- Number of usable merged reads: " + Integer.toString(numMergedReads));
+    logWriter.newLine();
+    double percMergedOfTotalInputPairs = Math.round(((double)numMergedReads/getNumReads()) * 10000.) / 100.;
+    logWriter.write("- Percentage of total input pairs resulting in usable merged reads: " + Double.toString(percMergedOfTotalInputPairs) + " %");
 		logWriter.newLine();
-		double percMerged = Math.round(((double)numMergedReads/getNumReads()) * 10000.) / 100.;
+		double percMerged = Math.round(((double)numMergedReads/getNumEnds()) * 10000.) / 100.;
 		logWriter.write("- Percentage of usable merged reads: " + Double.toString(percMerged) + " %");
 		logWriter.newLine();
 		logWriter.write("- Average overlap region size: " + Double.toString(getAverageOverlap()));
@@ -101,7 +104,45 @@ public class Statistics {
 		logWriter.write("     ... too short merged read: " + Integer.toString(numReadsMergedTooShort));
 		logWriter.newLine();
 
-		logWriter.newLine();
+    logWriter.newLine();
+
+    int numPairsUnmerged = getNumReads() - numMergedReads;
+    int numPairsMateAdapterOnly = numFReads + numRReads;
+    int numPairsMateTooShort = numNotMergedFReads + numNotMergedRReads + numReadsMateTooShort;
+    int numPairsNoPartnerTooShort = numReadsNoPartnerTooShortF + numReadsNoPartnerTooShortR;
+    double percUnmergedFailedClipping = Math.round(((double)numReadsFailClipping/numPairsUnmerged) * 10000.) / 100.;
+    double percUnmergedFailedQuality = Math.round(((double)numDiscardedMergedReads/numPairsUnmerged) * 10000.) / 100.;
+    double percUnmergedMateAdapterOnly = Math.round(((double)numPairsMateAdapterOnly/numPairsUnmerged) * 10000.) / 100.;
+    double percUnmergedMateTooShort = Math.round(((double)numPairsMateTooShort/numPairsUnmerged) * 10000.) / 100.;
+    double percUnmergedNoOverlap = Math.round(((double)numReadPairsTooSmallOverlap/numPairsUnmerged) * 10000.) / 100.;
+    double percMergedTooShort = Math.round(((double)numReadsMergedTooShort/numPairsUnmerged) * 10000.) / 100.;
+    double percUnmergedNoPartnerTooShort = Math.round(((double)numPairsNoPartnerTooShort/numPairsUnmerged) * 10000.) / 100.;
+
+    int totalUnmerged = numReadsMergedTooShort + numPairsMateAdapterOnly + numPairsMateTooShort + numReadsFailClipping + numDiscardedMergedReads + numReadPairsTooSmallOverlap + numReadsNoPartnerTooShortF + numReadsNoPartnerTooShortR;
+    //logWriter.write("numPairsUnmerged: "+numPairsUnmerged);
+    //logWriter.newLine();
+    //logWriter.write("totalUnmerged: "+totalUnmerged);
+    //logWriter.newLine();
+
+    logWriter.write("[Unmerged breakdown]");
+    logWriter.newLine();
+    logWriter.write("- Number of pairs unmerged: "+Integer.toString(totalUnmerged));
+    logWriter.newLine();
+    logWriter.write("- Percentage of unmerged pairs failed clipping: " + Double.toString(percUnmergedFailedClipping) + " %");
+    logWriter.newLine();
+    logWriter.write("- Percentage of unmerged pairs failed quality: " + Double.toString(percUnmergedFailedQuality) + " %");
+    logWriter.newLine();
+    logWriter.write("- Percentage of unmerged pairs mate adapter only: " + Double.toString(percUnmergedMateAdapterOnly) + " %");
+    logWriter.newLine();
+    logWriter.write("- Percentage of unmerged pairs mate too short: " + Double.toString(percUnmergedMateTooShort) + " %");
+    logWriter.newLine();
+    logWriter.write("- Percentage of unmerged pairs no overlap: " + Double.toString(percUnmergedNoOverlap) + " %");
+    logWriter.newLine();
+    logWriter.write("- Percentage of unmerged pairs merged too short: " + Double.toString(percMergedTooShort) + " %");
+    logWriter.newLine();
+    logWriter.write("- Percentage of unmerged pairs no partner too short: " + Double.toString(percUnmergedNoPartnerTooShort) + " %");
+    logWriter.newLine();
+    logWriter.newLine();
 	}
 
   public static void increaseNumReadsFailClipping() {
@@ -139,6 +180,10 @@ public class Statistics {
 	public static int getNumReads() {
 		return numReadsFailClipping + numFReads + numReadsNoPartnerTooShortF + numRReads + numReadsNoPartnerTooShortR + numMergedReads + numReadsMergedTooShort + numNotMergedFReads + numNotMergedRReads + numReadPairsTooSmallOverlap + numReadsMateTooShort + numDiscardedMergedReads;
 	}
+
+  public static int getNumEnds() {
+    return numMergedReads + numFReads + numReadPairsTooSmallOverlap + numNotMergedFReads + numRReads + numReadPairsTooSmallOverlap + numNotMergedRReads;
+  }
 
 	public static void increaseNumNotMergedForward() {
 		numNotMergedFReads++;
