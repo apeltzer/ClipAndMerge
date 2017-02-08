@@ -1,5 +1,5 @@
 group 'com.uni-tuebingen.de.it.eager.clipandmerge'
-version '1.7.5'
+version '1.7.6'
 
 
 buildscript {
