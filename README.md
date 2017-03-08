@@ -2,6 +2,7 @@
 The Clip&amp;Merge Method for paired end read merging and adapter clipping, quality trimming and other FastQ operations.
 
 [![Build Status](https://lambda.informatik.uni-tuebingen.de/jenkins/buildStatus/icon?job=ClipAndMerge)](https://lambda.informatik.uni-tuebingen.de/jenkins/view/EAGER/job/ClipAndMerge/)
+[![codecov](https://codecov.io/gh/apeltzer/ClipAndMerge/branch/master/graph/badge.svg)](https://codecov.io/gh/apeltzer/ClipAndMerge)
 [ ![Download](https://api.bintray.com/packages/apeltzer/EAGER/ClipAndMerge/images/download.svg) ](https://bintray.com/apeltzer/EAGER/ClipAndMerge/_latestVersion)
 
 Author: Günter Jäger <guenter.jaeger@uni-tuebingen.de>
