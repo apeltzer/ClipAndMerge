@@ -17,12 +17,6 @@
 package main;
 
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.List;
-
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.OptionHandlerFilter;
@@ -30,16 +24,21 @@ import org.kohsuke.args4j.spi.BooleanOptionHandler;
 import org.kohsuke.args4j.spi.DoubleOptionHandler;
 import org.kohsuke.args4j.spi.IntOptionHandler;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
-
 import setting.MergeSettings;
 import threads.ForwardClipperThread;
 import threads.MergeThread;
 import threads.ReverseClipperThread;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.List;
+
 /**
  * Clip & Merge script
  * @author guenter jaeger
- * @version 1.7.4
+ * @version 1.7.7
  * 
  * This script allows one to clip adapters from paired reads and 
  * to merge the clipped reads into a single read if they overlap

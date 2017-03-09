@@ -16,12 +16,12 @@
 
 package clipping;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-
 import setting.MergeSettings;
 import threads.ClipperThread;
 import trimming.EndTrimmer;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 /**
  * 
@@ -187,20 +187,63 @@ public class Clipper {
 		if(alignmentResults.queryEnd() == alignmentResults.querySize() - 1 && alignmentResults.mismatches() == 0) {
 			return alignmentResults.queryStart();
 		}
-		
-		if(alignmentSize > 5 && alignmentResults.targetStart() == 0 && (alignmentResults.matches() * 100 / alignmentSize) >= 75) {
-			return alignmentResults.queryStart();
-		}
+//		//TODO: Why 5 here???
+//		if(alignmentSize > 5 && alignmentResults.targetStart() == 0 && (alignmentResults.matches() * 100 / alignmentSize) >= 75) {
+//			return alignmentResults.queryStart();
+//		}
+
+        if(alignmentSize >= minimumAdapterLength && alignmentResults.targetStart() == 0 && (decisiveThreshold(alignmentResults.matches(), alignmentSize))){
+            return alignmentResults.queryStart();
+        }
 		
 		if(alignmentSize > 11 && (alignmentResults.matches() * 100 / alignmentSize) >= 80) {
 			return alignmentResults.queryStart();
 		}
 		
-		if(alignmentResults.queryEnd() >= alignmentResults.querySize() - 2 && alignmentSize <= 5 && alignmentResults.matches() >= 3) {
+		if(alignmentResults.queryEnd() >= alignmentResults.querySize() - 2 && alignmentSize <= 2 && alignmentResults.matches() >= minimumAdapterLength) {
 			return alignmentResults.queryStart();
 		}
 		
 		return -1; 
+	}
+
+	private boolean decisiveThreshold(int matches, int alignmentSize){
+		switch(alignmentSize){
+			case 1: if(matches == alignmentSize){
+				return true;
+			}
+			case 2: if(matches == alignmentSize){
+				return true;
+			}
+			case 3: if(alignmentSize - matches <= 1){
+				return true;
+			}
+			case 4: if(alignmentSize - matches <= 1){
+				return true;
+			}
+			case 5: if(alignmentSize - matches <= 2){
+				return true;
+			}
+			case 6: if(alignmentSize - matches <= 2){
+				return true;
+			}
+			case 7: if(alignmentSize - matches <= 3){
+				return true;
+			}
+			case 8: if(alignmentSize - matches <= 3){
+				return true;
+			}
+			case 9: if(alignmentSize - matches <= 4){
+				return true;
+			}
+			case 10: if(alignmentSize - matches <= 4){
+				return true;
+			}
+            case 11: if(alignmentSize - matches <= 5) {
+                return true;
+            }
+            default: return false;
+		}
 	}
 
 	public void outputStats(BufferedWriter logWriter) throws IOException {
