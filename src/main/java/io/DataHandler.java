@@ -16,17 +16,12 @@
 
 package io;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.zip.GZIPOutputStream;
-
+import clipping.Read;
 import setting.MergeSettings;
 import trimming.QualityTrimmer;
-import clipping.Read;
+
+import java.io.*;
+import java.util.zip.GZIPOutputStream;
 
 public class DataHandler {
 
@@ -95,22 +90,22 @@ public class DataHandler {
 				writeRead(readF, "", mpwf);
 				writeRead(readR, "", mpwr);
 			} else {
-				writeRead(readF, "F", mpwf);
-				writeRead(readR, "R", mpwr);
+				writeRead(readF, "F_", mpwf);
+				writeRead(readR, "R_", mpwr);
 			}
 			Statistics.increaseReadPairsNotMerged();
 		} else if(fOK && !settings.removeSingleReads()) {
 			if(settings.handleMatePairsSeperatly()){
-				writeRead(readF, "F", mpwf);
+				writeRead(readF, "F_", mpwf);
 			} else {
-				writeRead(readF, "F", bw);
+				writeRead(readF, "F_", bw);
 			}
 			Statistics.increaseNumNotMergedForward();
 		} else if(rOK && !settings.removeSingleReads()) {
 			if(settings.handleMatePairsSeperatly()){
-				writeRead(readR,"R",mpwr);
+				writeRead(readR,"R_",mpwr);
 			} else {
-				writeRead(readR, "R", bw);
+				writeRead(readR, "R_", bw);
 			}
 			Statistics.increaseNumNotMergedReverse();
 		} else {
@@ -121,37 +116,37 @@ public class DataHandler {
 	public void writeSingleEndRead(Read read, String prefix) throws IOException {
 		int minLength = settings.getMinSequenceLength();
 		//merged reads do not need to be quality trimmed
-		if(settings.qualityTrimming() && !prefix.equals("M")) {
+		if(settings.qualityTrimming() && !prefix.equals("M_")) {
 			qt.trim(read);
 		}
 
 		if(read.sequence.length() < minLength) {
-			if(prefix.equals("M")) {
+			if(prefix.equals("M_")) {
 				Statistics.increaseMergedTooShort();
-			} else if(prefix.equals("F")) {
+			} else if(prefix.equals("F_")) {
 				Statistics.increaseNoPartnerTooShortF();
-			} else if(prefix.equals("R")) {
+			} else if(prefix.equals("R_")) {
 				Statistics.increaseNoPartnerTooShortR();
 			}
 		} else {
-			if(prefix.equals("F")) {
+			if(prefix.equals("F_")) {
 				Statistics.increaseForwardReads();
-			} else if(prefix.equals("R")) {
+			} else if(prefix.equals("R_")) {
 				Statistics.increaseReverseReads();
-			} else if(prefix.equals("M")) {
+			} else if(prefix.equals("M_")) {
 				Statistics.increaseMergedReads();
 				Statistics.increaseMergingOverlap(getCurrentOverlap());
 			}
 
 			if(!settings.removeSingleReads())
 				if(settings.handleMatePairsSeperatly()){
-					if(prefix.equals("F")){
+					if(prefix.equals("F_")){
 						writeRead(read,prefix,mpwf);
 					}
-					if(prefix.equals("R")){
+					if(prefix.equals("R_")){
 						writeRead(read,prefix,mpwr);
 					}
-					if(prefix.equals("M")){
+					if(prefix.equals("M_")){
 						writeRead(read,prefix,bw);
 					}
 				} else {
@@ -170,7 +165,7 @@ public class DataHandler {
 
 	private void writeRead(Read read, String prefix, BufferedWriter writeOut) throws IOException {
 		StringBuffer result = new StringBuffer();
-		result.append(read.name.replaceFirst("@", "@"+prefix+"_"));
+		result.append(read.name.replaceFirst("@", "@"+prefix));
 		result.append("\n");
 		result.append(read.sequence);
 		result.append("\n");

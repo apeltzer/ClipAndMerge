@@ -16,16 +16,15 @@
 
 package threads;
 
+import clipping.Read;
 import io.DataHandler;
 import io.Statistics;
-
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import main.MergeScript;
 import setting.MergeSettings;
 import trimming.QualityTrimmer;
-import clipping.Read;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MergeThread extends Thread {
 
@@ -102,7 +101,7 @@ public class MergeThread extends Thread {
 
 			if(settings.getReverseReadsReader() == null) { //only single end read file available
 				while((forwardRead = forwardReads.take()) != terminatingRead) {
-					dh.writeSingleEndRead(forwardRead, "F");
+					dh.writeSingleEndRead(forwardRead, "F_");
 				}
 			} else { //forward and reverse read files available
 				while ((forwardRead = forwardReads.take()) != terminatingRead
@@ -113,11 +112,11 @@ public class MergeThread extends Thread {
 					if(forwardRead == ClipperThread.nullRead && reverseRead != ClipperThread.nullRead) {
 						//forward read was an adapter only read and removed already
 						//just output the reverse read if it is long enough
-						dh.writeSingleEndRead(reverseRead, "R");
+						dh.writeSingleEndRead(reverseRead, "R_");
 					} else if(reverseRead == ClipperThread.nullRead && forwardRead != ClipperThread.nullRead) {
 						//reverse read was an adapter only read and removed already
 						//just output the forward read if it is long enough
-						dh.writeSingleEndRead(forwardRead, "F");
+						dh.writeSingleEndRead(forwardRead, "F_");
 					} else if(forwardRead != ClipperThread.nullRead && reverseRead != ClipperThread.nullRead) {
 						//we have clipped both reads, now we can try to merge them
 						if(settings.noMerging()) {
@@ -189,7 +188,7 @@ public class MergeThread extends Thread {
 			readF.sequence = newSeq.toString();
 			readF.quality = newQual.toString();
 
-			dh.writeSingleEndRead(readF, "M");
+			dh.writeSingleEndRead(readF, "M_");
 		} else { //try to flip strands and merge again -> this helps in some cases!
 			int[] overlapIndexReverse = findOverlap(seqRreverse, seqF, qualR, qualF, minOverlap, errRate, qualityOffset, qualityBasedMM);
 
@@ -246,11 +245,11 @@ public class MergeThread extends Thread {
 //				System.out.println("Overlap: " + overlap);
 
 				if(!settings.discardBadQualityReads()) {
-					dh.writeSingleEndRead(readF, "M");
+					dh.writeSingleEndRead(readF, "M_");
 				} else {
 					if(!badQualityCheck(readF, settings.getMinGoodQualityBasePercentage(),
 							settings.getDiscardBadQualityReadsScore())) {
-						dh.writeSingleEndRead(readF, "M");
+						dh.writeSingleEndRead(readF, "M_");
 					} else {
 						Statistics.increaseDiscardedMergedReads();
 					}
