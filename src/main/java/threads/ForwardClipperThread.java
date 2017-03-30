@@ -16,12 +16,12 @@
 
 package threads;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-
-import setting.MergeSettings;
 import clipping.Clipper;
 import clipping.Read;
+import setting.MergeSettings;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 
 public class ForwardClipperThread extends ClipperThread {
 	

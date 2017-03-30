@@ -120,7 +120,7 @@ public class DataHandler {
 			qt.trim(read);
 		}
 
-		if(read.sequence.length() < minLength) {
+		if(read.sequence.length() < minLength | read.name.equals("null")) { //if its a null read, we remove it!
 			if(prefix.equals("M_")) {
 				Statistics.increaseMergedTooShort();
 			} else if(prefix.equals("F_")) {
