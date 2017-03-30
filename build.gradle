@@ -1,6 +1,19 @@
 group 'com.uni-tuebingen.de.it.eager.clipandmerge'
 version '1.7.7'
 
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
 
 buildscript {
     repositories {
@@ -11,18 +24,6 @@ buildscript {
     }
 }
 
-
-allprojects {
-    repositories {
-        jcenter()
-    }
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
-    apply plugin: 'java'
-    apply plugin: 'com.jfrog.bintray'
-    apply plugin: 'jacoco'
-
-}
 
 sourceCompatibility = 1.8
 
@@ -40,8 +41,7 @@ dependencies {
     compile 'args4j:args4j:2.33'
     compile 'junit:junit:4.12'
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile "org.mockito:mockito-core:2.+"
-
+    compile "org.mockito:mockito-core:2.+"
 }
 
 
@@ -77,7 +77,7 @@ bintray {
         repo = 'EAGER'
         name = 'ClipAndMerge'
         licenses = ['GPL-3.0']
-        vcsUrl = "https://github.com/apeltzer/VCF2Genome"
+        vcsUrl = "https://github.com/apeltzer/ClipAndMerge"
         version {
             name = project.version
             desc = 'The Clip&Merge Method for paired end read merging and adapter clipping, quality trimming and other FastQ operations.'

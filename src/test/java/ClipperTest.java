@@ -18,10 +18,10 @@ import static junit.framework.TestCase.assertEquals;
 public class ClipperTest extends AbstractTest{
 
     @Mock
-    InputStreamReader outReader;
+    private InputStreamReader outReader;
 
     @Mock
-    BufferedReader mockBfReader;
+    private BufferedReader mockBfReader;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
