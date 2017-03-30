@@ -87,6 +87,17 @@ public class ClipperTest extends AbstractTest{
     Case 3: Partial overlap (not complete adapter sequence, trickiest case)
      */
 
+    @Test
+    public void clipper_very_small_adapter_sequence_withm8() throws Exception{
+        Clipper clipper = new Clipper(mergeSettings);
+        clipper.init();
+        clipper.setAdapter(mergeSettings.getForwardAdapter());
+
+        Read raw = new Read("@VerySmallAdapter", "ATTTAAATTAAGGAAA", "+", "!!!!!!!!!!!!!!!!");
+        Read clipped = clipper.clip(raw);
+        assertEquals("ATTTAAATTAAGGAAA", clipped.sequence);
+    }
+
     /*
     Case 4: Read contains full adapter sequence at 3'
      */
