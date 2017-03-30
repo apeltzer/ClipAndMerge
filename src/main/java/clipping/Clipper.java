@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. ClipAndMerge Günter Jäger
+ * Copyright (c) 2016. ClipAndMerge Guenter Jaeger
  * This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -16,12 +16,12 @@
 
 package clipping;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-
 import setting.MergeSettings;
 import threads.ClipperThread;
 import trimming.EndTrimmer;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 /**
  * 
