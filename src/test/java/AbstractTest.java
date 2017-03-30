@@ -1,7 +1,12 @@
 import org.junit.Before;
 import setting.MergeSettings;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -20,17 +25,16 @@ public abstract class AbstractTest {
     @Before
     public abstract void setUp() throws Exception;
 
-    protected void universalSetup(String forward, String reverse) throws Exception {
-        if(output ==null){
-            throw new RuntimeException("Output FastQ file not found for test.");
-        } else {
-            outputStreamReader = new InputStreamReader(output);
-            bufferedReader = new BufferedReader(outputStreamReader);
+    protected void universalSetup(String forward, String reverse, File[] in1, File[] in2) throws Exception {
+            //Mocking objects just for testing purposes
+            outputStreamReader = mock(InputStreamReader.class);
+            bufferedReader = mock(BufferedReader.class);
+
             mergeSettings = new MergeSettings();
             mergeSettings.setForwardReadsReader(in1);
             mergeSettings.setReverseReadsReader(in2);
-            mergeSettings.setOutputFile("pathtooutputfile");
-            mergeSettings.setLogFile("pathtologfile");
+            mergeSettings.setOutputFile("testOut/pathtooutputfile");
+            mergeSettings.setLogFile("testOut/pathtologfile");
 
             mergeSettings.setForwardAdapter("AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC");
             mergeSettings.setReverseAdapter("AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA");
@@ -43,8 +47,8 @@ public abstract class AbstractTest {
 
             mergeSettings.setClipping(true);
 
-            mergeSettings.setMatePairFileForward(new File(forward));
-            mergeSettings.setMatePairFileReverse(new File(reverse));
+            mergeSettings.setMatePairFileForward(new File("testOut/forward"));
+            mergeSettings.setMatePairFileReverse(new File("testOut/reverse"));
 
             mergeSettings.setMerging(false);
             mergeSettings.setRemoveSingleReads(false);
@@ -65,6 +69,6 @@ public abstract class AbstractTest {
             mergeSettings.setTrim5P(0);
             mergeSettings.setLastBaseToKeep(Integer.MAX_VALUE);
         }
-    }
+
 
 }
