@@ -20,7 +20,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
     }
 }
 
@@ -76,8 +76,7 @@ jacocoTestReport {
 
 bintray {
     user = System.getenv('BINTRAY_USER')
-    apiKey = System.getenv('BINTRAY_API_KEY')
-
+    key = System.getenv('BINTRAY_API_KEY')
     publications = ['MyPublication']
     publish = true
     override = true
