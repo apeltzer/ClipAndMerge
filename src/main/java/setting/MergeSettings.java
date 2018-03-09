@@ -90,6 +90,10 @@ public class MergeSettings {
 	public MergeSettings() {
 		//nothing to do;
 	}
+
+	public File getFirstForwardRead() {
+		return forwardReads[0];
+	}
 	
 	public void setTrim5P(int trim5P) {
 		this.trim5P = trim5P;

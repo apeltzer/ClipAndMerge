@@ -21,6 +21,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.kohsuke.args4j.CmdLineParser;
@@ -39,7 +41,7 @@ import threads.ReverseClipperThread;
 /**
  * Clip & Merge script
  * @author guenter jaeger
- * @version 1.7.4
+ * @version 1.7.8
  * 
  * This script allows one to clip adapters from paired reads and 
  * to merge the clipped reads into a single read if they overlap
@@ -51,7 +53,7 @@ import threads.ReverseClipperThread;
  */
 public class MergeScript {
 	
-	public static final String VERSION = "1.7.6";
+	public static final String VERSION = "1.7.8";
 	public static final String TITLE = "ClipAndMerge (v. " + VERSION +")";
 	
 	public long startTime;
@@ -343,7 +345,7 @@ public class MergeScript {
 			logWriter.write("by G\u00FCnter J\u00E4ger");
 			logWriter.newLine();
 			logWriter.newLine();
-			
+
 			logWriter.write("[Parameters]");
 			logWriter.newLine();
 			logWriter.write("- Skip adapter clipping: " + settings.noClipping());
@@ -465,4 +467,6 @@ public class MergeScript {
 		stream.println("Input sequences are accepted in fastq, or in gzipped fastq format.");
 		stream.println();
 	}
+
+
 }

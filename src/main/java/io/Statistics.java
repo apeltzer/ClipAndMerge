@@ -17,11 +17,15 @@
 package io;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 public class Statistics {
 
-  private static int numReadsFailClipping = 0;
+	private static String identifier = "";
+  	private static int numReadsFailClipping = 0;
 
 	private static int numMergedReads = 0;
 	private static int numFReads = 0;
@@ -41,13 +45,15 @@ public class Statistics {
 	private static int numReadsTooShortF = 0;
 	private static int numReadsTooShortR = 0;
 	private static int numReadsMergedTooShort = 0;
-  private static int numReadsMateTooShort = 0;
+  	private static int numReadsMateTooShort = 0;
 
 	private static int numDiscardedMergedReads = 0;
 
 	private static int sumOverlaps = 0;
 
-	public static void printStats(BufferedWriter logWriter) throws IOException {
+	public static void printStats(BufferedWriter logWriter, File name) throws IOException {
+	logWriter.write("SampleID: " +getSampleName(name));
+	logWriter.newLine();
     logWriter.write("[Clipping both]");
     logWriter.newLine();
     logWriter.write("- Number of reads failed clipping: "+Integer.toString(numReadsFailClipping));
@@ -223,5 +229,11 @@ public class Statistics {
 
 	public static double getAverageOverlap() {
 		return Math.round((((double)sumOverlaps / (double)numMergedReads))*1000.)/1000.;
+	}
+
+	private static String getSampleName(File nam){
+		Path p = nam.toPath();
+		String out = p.getFileName().toFile().getName();
+		return out;
 	}
 }

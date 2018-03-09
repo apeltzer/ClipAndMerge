@@ -191,8 +191,10 @@ public class DataHandler {
 		}
 
 		synchronized(settings.getLogWriter()) {
-			Statistics.printStats(settings.getLogWriter());
+			Statistics.printStats(settings.getLogWriter(), settings.getFirstForwardRead());
 			settings.getLogWriter().flush();
 		}
 	}
+
+
 }
