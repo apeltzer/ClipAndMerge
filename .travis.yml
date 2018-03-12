@@ -1,0 +1,15 @@
+language: java
+sudo: false
+jdk:
+- oraclejdk8
+script: gradle build
+env:
+- version=1.7.8
+deploy:
+  provider: releases
+  api_key:
+    secure: deFYrUfvtU5YgpF/Ik1vNG5+Tehf4ERLba7iYwiC0n67lOnAo8FNlmH/HPyYpk3USlYp6kFHLg9q5xPfAuJE2w8SdHxCaOUZgzP51ryRlgXXJYJP537enZXUJH0vFRkjnlTJgL9716wPTTyFMlz+zRqK3WcRaE2VaL+qAJquUAwALN0k1CetoSWkKty2m0xkHNgEo8fh5z8vZh1W2/Y1C8xG9D0HcAieL9rUuNvIwvAgq6GxtVK3MecZUf166qzsKI4mOAWy6uxhk2F4A1SWBF4FI1dEng7bdxsPNItfpDS00P/KbV243MP8JntQw60Gdn1KK7cRSrXLJfr4x93I85fE13oc7HKVxeWlWVCPJi1BodVMP6DKEzgKNElctzSvQpI3DHSwUOKuBHCwLrySugjWr4nYEF+ntBGSsAq8CubHuk3cP7imX5cwCsg1vYMxCFEaCcDotW/lemOj3yI/NR4NJ18VDy6qwRT3ryo1uZBcTqwLOzmSSLsC2U7EjTbZ9SqpiPPm4bVuhi+jT5c12UaS7rdkog3aKUP6PpHt9u0QaSZh5Ul/FsX8OabMuhp7nmQtHWhVjSmDSL/VMgap4s0TPchPJluSLe3xvD2Anq4z3MBEerDPpqCu9g42PX3PON5jkVvIA/XmsDIxBhQsRwcSAiCDqvHGwv7fpuEhI88=
+  file: build/libs/ClipAndMerge-1.7.8.jar
+  skip_cleanup: true
+  on:
+    repo: apeltzer/ClipAndMerge
