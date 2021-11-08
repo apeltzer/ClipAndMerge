@@ -14,3 +14,5 @@ Author: Günter Jäger <guenter.jaeger@uni-tuebingen.de>
 Contact Alexander Peltzer <alexander.peltzer@uni-tuebingen.de> for questions regarding the tool or write him on GitHub/open a ticket.
 
 Releases: The releases for this project can be found directly downloaded from here in the Releases section.
+
+If you find the tool useful, please cite the main EAGER paper under https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0918-z.
