@@ -6,7 +6,6 @@ apply plugin: 'jacoco'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
 
 
 repositories {
@@ -20,7 +19,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
     }
 }
 
@@ -70,28 +68,5 @@ publishing {
 jacocoTestReport {
     reports {
         xml.enabled true
-    }
-}
-
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_API_KEY')
-    publications = ['MyPublication']
-    publish = true
-    override = true
-    pkg {
-        repo = 'EAGER'
-        name = 'ClipAndMerge'
-        licenses = ['GPL-3.0']
-        vcsUrl = "https://github.com/apeltzer/ClipAndMerge"
-        version {
-            name = project.version
-            desc = 'The Clip&Merge Method for paired end read merging and adapter clipping, quality trimming and other FastQ operations.'
-            released  = new Date()
-            vcsTag = project.version
-            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-        }
-
     }
 }
